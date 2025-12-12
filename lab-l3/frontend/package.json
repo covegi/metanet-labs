@@ -1,0 +1,24 @@
+{
+  "name": "lab-l3-frontend",
+  "version": "1.0.0",
+  "description": "Lab L-3: Messaging Application Frontend",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@bsv/message-box-client": "^1.4.2",
+    "@bsv/sdk": "^1.5.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.19",
+    "@types/react": "^19.1.3",
+    "@types/react-dom": "^19.1.3",
+    "@vitejs/plugin-react": "^4.4.1",
+    "typescript": "^5.8.3",
+    "vite": "^4.5.14"
+  }
+}
