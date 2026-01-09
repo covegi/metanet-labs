@@ -174,7 +174,7 @@ import {
   
       const unlockingScript = await unlocker.sign(
         Transaction.fromBEEF(partial.signableTransaction!.tx),
-        token.outputIndex
+        0
       )
   
       await walletClient.signAction({
