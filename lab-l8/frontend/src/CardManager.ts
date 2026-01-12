@@ -46,8 +46,8 @@ import {
         const cardAttributesObj = {
             name: card.name,
             description: card.description,
-            rarity: card.rarity,
-            ability: card.ability
+            rarity: card.rarity,    
+            ability: card.ability,
         }
 
         const cardAttributesJSON = JSON.stringify(cardAttributesObj)
@@ -68,7 +68,9 @@ import {
                 lockingScript: lockingScript.toHex(),
                 satoshis: card.sats,
                 basket: BASKET_NAME,
-                customInstructions: JSON.stringify({ keyID, history: card.history })
+                customInstructions: JSON.stringify({ 
+                    keyID, 
+                    history: card.history || `Card created on ${new Date().toLocaleString()}`})
             }],
             options: {
                 randomizeOutputs: false,
@@ -207,3 +209,35 @@ import {
             throw new Error("Unknown error during task creation")
         }
     }
+
+    // export async function updateCardHistory(card: CardData, newEntry: string): Promise<void> {
+    //     try {
+    //         const { outputs } = await walletClient.listOutputs({
+    //             basket: BASKET_NAME,
+    //             includeCustomInstructions: true
+    //         })
+
+    //         const cardOutput = outputs.find(output => output.outpoint === `${card.txid}.${card.outputIndex}`)
+
+    //         if (!cardOutput) throw new Error("Card not found in wallet")
+
+    //         const instructions = cardOutput.customInstructions
+    //         ? JSON.parse(cardOutput.customInstructions)
+    //         : { keyId: card.keyID, history: ""}
+
+    //         const timeStamp = new Date().toLocaleString()
+    //         const newHistoryEntry = `${newEntry} ${timeStamp}`
+    //         const updatedHistory = instructions.history
+    //         ? `${instructions.history}\n${newHistoryEntry}`
+    //         : newHistoryEntry
+
+    //         await walletClient.updateOutput({ // I assumed updateOutput() or similar existed in WalletClient. I learnt i does not. 
+    //             txid: card.txid,
+    //             outputIndex: card.outputIndex,
+    //             customInstructions: JSON.stringify({
+    //                 keyID: card.keyID,
+    //                 history: updatedHistory
+    //             })
+    //         })
+    //     }
+    // }
