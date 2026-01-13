@@ -43,11 +43,14 @@ import {
     try {
         const keyID = generateUniqueKeyID()
 
+        const defaultHistory = card.history || `Card created on ${new Date().toLocaleString()}`
+
         const cardAttributesObj = {
             name: card.name,
             description: card.description,
             rarity: card.rarity,    
             ability: card.ability,
+            history: defaultHistory
         }
 
         const cardAttributesJSON = JSON.stringify(cardAttributesObj)
@@ -70,7 +73,8 @@ import {
                 basket: BASKET_NAME,
                 customInstructions: JSON.stringify({ 
                     keyID, 
-                    history: card.history || `Card created on ${new Date().toLocaleString()}`})
+                    history: defaultHistory
+                })
             }],
             options: {
                 randomizeOutputs: false,
@@ -210,34 +214,26 @@ import {
         }
     }
 
-    // export async function updateCardHistory(card: CardData, newEntry: string): Promise<void> {
-    //     try {
-    //         const { outputs } = await walletClient.listOutputs({
-    //             basket: BASKET_NAME,
-    //             includeCustomInstructions: true
-    //         })
+    export async function updateCardHistory(card: CardData, newEntry: string): Promise<void> {
+        try {
+            await redeemCard(card)
 
-    //         const cardOutput = outputs.find(output => output.outpoint === `${card.txid}.${card.outputIndex}`)
+            const timeStamp = new Date().toLocaleString()
+            const newHistoryEntry = `${newEntry} ${timeStamp}`
+            const updateHistory = card.history 
+            ? `${card.history}\n${newHistoryEntry}`
+            : newHistoryEntry
 
-    //         if (!cardOutput) throw new Error("Card not found in wallet")
-
-    //         const instructions = cardOutput.customInstructions
-    //         ? JSON.parse(cardOutput.customInstructions)
-    //         : { keyId: card.keyID, history: ""}
-
-    //         const timeStamp = new Date().toLocaleString()
-    //         const newHistoryEntry = `${newEntry} ${timeStamp}`
-    //         const updatedHistory = instructions.history
-    //         ? `${instructions.history}\n${newHistoryEntry}`
-    //         : newHistoryEntry
-
-    //         await walletClient.updateOutput({ // I assumed updateOutput() or similar existed in WalletClient. I learnt i does not. 
-    //             txid: card.txid,
-    //             outputIndex: card.outputIndex,
-    //             customInstructions: JSON.stringify({
-    //                 keyID: card.keyID,
-    //                 history: updatedHistory
-    //             })
-    //         })
-    //     }
-    // }
+            await createCard({
+                name: card.name,
+                description: card.description,
+                rarity: card.rarity,
+                ability: card.ability,
+                history: updateHistory,
+                sats: card.sats
+            })
+        } catch (error) {
+            console.error("Failed to update card history:", error)
+            throw error
+        }
+    }

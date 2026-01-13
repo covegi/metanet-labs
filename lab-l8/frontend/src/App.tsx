@@ -10,7 +10,7 @@ import {
     FormControl,
     InputLabel
  } from '@mui/material'
-import { createCard, loadCards, redeemCard, CardData } from './CardManager'
+import { createCard, loadCards, redeemCard, updateCardHistory, CardData } from './CardManager'
 import Footer from './utils/footer'
 
 interface CardForm {
@@ -86,15 +86,15 @@ const App: React.FC = () => {
         }
     }
 
-    // const handleUpdateCardHistory = async (card: CardData, newEntry: string) {
-    //     try {
-    //         await updateCardHistory(card, newEntry)
-    //         await fetchCards()
-    //         alert("History updated!")
-    //     } catch (error) {
-    //         alert("Failed to update history")
-    //     }
-    // }
+    const handleUpdateCardHistory = async (card: CardData, newEntry: string) => {
+        try {
+            await updateCardHistory(card, newEntry)
+            await fetchCards()
+            alert("History updated!")
+        } catch (error) {
+            alert("Failed to update history")
+        }
+    }
 
   return (
     <>
@@ -210,7 +210,7 @@ const App: React.FC = () => {
                     <Typography>Description: {card.description}</Typography>
                     <Typography>Rarity: {card.rarity}</Typography>
                     <Typography>Ability: {card.ability}</Typography>
-                    <Typography>History: {card.history}</Typography>
+                    <Typography sx={{ whiteSpace: "pre-line"}}>History: {card.history}</Typography>
                     <Typography>Sats: {card.sats}</Typography>
                     <Button
                         variant="outlined"
@@ -220,17 +220,17 @@ const App: React.FC = () => {
                     >
                         Redeem
                     </Button>
-                    {/* <Button
+                    <Button
                         variant="outlined"
                         color="secondary"
                         onClick={() => {
                             const newEntry = prompt("Enter history update:")
                             if (newEntry) handleUpdateCardHistory(card, newEntry)
                         }}
-                        sx={{ mt: 1 }}
+                        sx={{ mt: 1, ml: 1 }}
                     >
                         Update History
-                    </Button> */}
+                    </Button>
                     </Box>
                 ))
                 
