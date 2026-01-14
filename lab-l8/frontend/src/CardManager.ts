@@ -50,7 +50,6 @@ import {
             description: card.description,
             rarity: card.rarity,    
             ability: card.ability,
-            history: defaultHistory
         }
 
         const cardAttributesJSON = JSON.stringify(cardAttributesObj)
@@ -216,24 +215,94 @@ import {
 
     export async function updateCardHistory(card: CardData, newEntry: string): Promise<void> {
         try {
-            await redeemCard(card)
-
             const timeStamp = new Date().toLocaleString()
             const newHistoryEntry = `${newEntry} ${timeStamp}`
-            const updateHistory = card.history 
-            ? `${card.history}\n${newHistoryEntry}`
-            : newHistoryEntry
+            const updateHistory = card.history
+                ? `${card.history}\n${newHistoryEntry}`
+                : newHistoryEntry
+            
+            const beefData = await walletClient.listOutputs({
+                basket: BASKET_NAME,
+                include: "entire transactions",
+            })
 
-            await createCard({
+            if (!beefData.BEEF) throw new Error("BEEF data not available")
+
+            const lockingScript = LockingScript.fromHex(card.outputScript)
+
+            const unlocker = pushdrop.unlock(
+                PROTOCOL_ID,
+                card.keyID,
+                "self",
+                "all",
+                false,
+                card.sats,
+                lockingScript   
+            )
+
+            const cardAttributes = {
                 name: card.name,
                 description: card.description,
                 rarity: card.rarity,
-                ability: card.ability,
-                history: updateHistory,
-                sats: card.sats
+                ability: card.ability
+            }
+
+            const cardAttributesJSON = JSON.stringify(cardAttributes)
+            const cardAttributesUTF8 = Utils.toArray(cardAttributesJSON, "utf8")
+
+            const newLockingScript = await pushdrop.lock(
+                [cardAttributesUTF8],
+                PROTOCOL_ID,
+                card.keyID,
+                "self",
+                true
+            )
+
+            const action = await walletClient.createAction({
+                description: "updated card",
+                inputBEEF: beefData.BEEF,
+                inputs: [{
+                    inputDescription: "old card utxo",
+                    outpoint: `${card.txid}.${card.outputIndex}`,
+                    unlockingScriptLength: 73 
+                }],
+                outputs: [{
+                    outputDescription: "new card utxo",
+                    lockingScript: newLockingScript.toHex(),
+                    basket: BASKET_NAME,
+                    satoshis: card.sats,
+                    customInstructions: JSON.stringify({
+                        keyID: card.keyID,
+                        history: updateHistory
+                    })
+                }],
+                options: {
+                    randomizeOutputs: false,
+                    acceptDelayedBroadcast: false
+                }
             })
+            const unlockingScript = await unlocker.sign(
+                Transaction.fromBEEF(action.signableTransaction!.tx),
+                0
+            )
+            await walletClient.signAction({
+                reference: action.signableTransaction!.reference,
+                spends: {
+                    0: {
+                        unlockingScript: unlockingScript.toHex()
+                    }
+                }
+            })
+
         } catch (error) {
-            console.error("Failed to update card history:", error)
-            throw error
+            if (error instanceof WERR_REVIEW_ACTIONS) {
+                throw new Error("Transaction requires review before broadcast")
+            }
+            if (error instanceof Error) throw error
+            throw new Error("Unknown error during task creation")
         }
     }
+        
+    
+        
+    
