@@ -170,8 +170,8 @@ const App: React.FC = () => {
         setTest2FriendIdentity(friendKey)
         setTest6FriendIdentity(friendKey)
         setTest9VerifierIdentity(friendKey)
-        setTest3FriendIdentity(friendKey)
-        setTest7FriendIdentity(friendKey)
+        setTest3FriendIdentity(defaultKey)
+        setTest7FriendIdentity(defaultKey)
       } catch (error) {
         console.error(
           'Failed to fetch identity key for App.tsx:',
