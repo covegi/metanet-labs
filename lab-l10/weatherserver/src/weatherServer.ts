@@ -41,6 +41,7 @@ async function init() {
         res.header("Access-Control-Allow-Methods", "*")
         res.header("Access-Control-Expose-Headers", "*")
         res.header("Access-Control-Allow-Private-Network", "true")
+        res.header("Access-Control-Max-Age", "86400")
         if (req.method === "OPTIONS") {
             res.sendStatus(200)
             return
