@@ -1,0 +1,21 @@
+{
+  "name": "lab-l9-user_auth",
+  "version": "1.0.0",
+  "description": "Lab L-9: Implementing User Authentication",
+  "main": "index.js",
+  "scripts": {
+    "lars": "lars",
+    "lars:config": "lars config",
+    "start": "bash -lc 'npm --prefix backend run start & npm --prefix frontend run start & lars start'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@bsv/lars": "^1.5.0",
+    "@bsv/sdk": "^1.5.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}
+

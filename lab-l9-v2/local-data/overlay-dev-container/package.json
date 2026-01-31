@@ -1,0 +1,26 @@
+{
+  "name": "overlay-express-dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "tsx watch index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@bsv/auth-express-middleware": "^1.1.2",
+    "@bsv/sdk": "^1.5.2",
+    "@bsv/wallet-toolbox": "^1.3.24",
+    "body-parser": "^2.2.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "@bsv/overlay-express": "^0.8.4",
+    "mysql2": "^3.11.5",
+    "tsx": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1"
+  }
+}
