@@ -1,0 +1,21 @@
+{
+  "name": "lab-l10-v4",
+  "version": "1.0.0",
+  "description": "Lab L-10: Integrating Payments and Fetching Weather Data in a Blockchain Application",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "weatherserver"
+  ],
+  "scripts": {
+    "lars": "lars",
+    "lars:config": "lars config",
+    "start": "lars start",
+    "build": "cd frontend && npm run build && cd ../weatherserver && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@bsv/lars": "^1.5.0",
+    "@bsv/sdk": "^1.5.2"
+  }
+}
