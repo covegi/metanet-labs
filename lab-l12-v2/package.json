@@ -1,0 +1,23 @@
+{
+  "name": "lab-l12-v2",
+  "version": "1.0.0",
+  "description": "Lab L-12: Managing Backend Wallets and Creating Transactions in a Blockchain Application",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "logger-server"
+  ],
+  "scripts": {
+    "lars": "lars",
+    "lars:config": "lars config",
+    "start": "lars start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@bsv/lars": "^1.5.0",
+    "@bsv/sdk": "^1.5.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
