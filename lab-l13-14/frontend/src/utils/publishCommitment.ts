@@ -84,7 +84,7 @@ export async function publishCommitment({
             Utils.toArray(expiryTime.toString()),
             Utils.toArray(contentLength.toString())
         ],
-        [1, "tm_uhrp"],
+        [1, "tm uhrp"],
         "1",
         "self"
     )
