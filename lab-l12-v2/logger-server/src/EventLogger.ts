@@ -133,7 +133,6 @@ export class EventLogger {
                 if (!decoded.fields || decoded.fields.length === 0) return null
 
                 const payloadStr = Utils.toUTF8(decoded.fields[0])
-                console.log('[debug] payloadStr:', payloadStr)
                 const payloadJSON = JSON.parse(payloadStr)
 
                 if (!payloadJSON.message) return null

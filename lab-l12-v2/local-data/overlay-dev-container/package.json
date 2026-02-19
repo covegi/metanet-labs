@@ -1,0 +1,21 @@
+{
+  "name": "overlay-express-dev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "tsx watch index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1",
+    "@bsv/overlay-express": "^0.8.4",
+    "mysql2": "^3.11.5",
+    "tsx": "^4.19.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1"
+  }
+}

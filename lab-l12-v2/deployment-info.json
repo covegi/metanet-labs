@@ -11,7 +11,8 @@
         "provider": "LARS",
         "network": "mainnet",
         "run": [
-          "frontend"
+          "frontend",
+          "backend"
         ]
       },
       {
