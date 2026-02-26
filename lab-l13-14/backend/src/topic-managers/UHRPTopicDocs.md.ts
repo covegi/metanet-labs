@@ -1,0 +1,2 @@
+export default `# UHRP Topic Manager
+Validates UHRP file storage commitment tokens for the tm_uhrp topic. Checks PushDrop fields: protocol address, SHA-256 hash, hosted file URL, expiry date and file size.`

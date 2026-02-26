@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Lab L-13-14: Creating a Topic Manager for File Storage Commitment Tracking with UI Integration",
   "workspaces": [
-    "frontend"
+    "frontend",
+    "backend"
   ],
   "scripts": {
     "lars": "lars",
@@ -12,7 +13,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@bsv/lars": "^1.5.0",
+    "@bsv/lars": "^1.5.8",
     "@bsv/sdk": "^1.5.2"
   },
   "devDependencies": {

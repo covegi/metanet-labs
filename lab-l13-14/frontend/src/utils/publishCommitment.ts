@@ -78,7 +78,6 @@ export async function publishCommitment({
     const lockingScript = await pushdrop.lock(
         [
             Utils.toArray("1UHRPYnMHPuQ5Tgb3AF8JXqwKkmZVy5hG"),
-            Utils.toArray(address),
             UHRHash,
             Utils.toArray(UHRPURL.uhrpURL),
             Utils.toArray(expiryTime.toString()),
@@ -99,6 +98,12 @@ export async function publishCommitment({
             }
         ]
     })
+
+    const broadcaster = new TopicBroadcaster(['tm_uhrp'], {
+      networkPreset: 'local'
+    })
+    await broadcaster.broadcast(Transaction.fromAtomicBEEF(tx.tx!))
+
 
     console.log('Transaction created and broadcasted:', tx.txid ?? "unknown")
     console.log('[commitmentToken] Token created with TXID:', tx.txid ?? "unknown")
