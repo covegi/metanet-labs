@@ -308,7 +308,7 @@ import {
    */
   async function signForSelf(message: string): Promise<string> {
     try {
-      const messageUTF8ByteArray = Utils.toArray(message)
+      const messageUTF8ByteArray = Utils.toArray(message, "utf8")
       const signature = await walletClient.createSignature({
         data: messageUTF8ByteArray,
         protocolID: [0, 'cryption'],
@@ -339,7 +339,7 @@ import {
       })
       validatePublicKey(publicKey.publicKey)
 
-      const messageUTF8ByteArray = Utils.toArray(message)
+      const messageUTF8ByteArray = Utils.toArray(message, "utf8")
       const signatureByteArray = fromHex(signature)
       const verifiedSignature = await walletClient.verifySignature({
         data: messageUTF8ByteArray,
@@ -367,7 +367,7 @@ import {
   ): Promise<string> {
     try {
         validatePublicKey(friendIdentity)
-        const messageUTF8ByteArray = Utils.toArray(message)
+        const messageUTF8ByteArray = Utils.toArray(message, "utf8")
         const signature = await walletClient.createSignature({
           data: messageUTF8ByteArray,
           protocolID: [0, 'cryption'],
@@ -519,8 +519,18 @@ import {
           types: []
         })
         allCertsToUse = allCerts.certificates
+        console.log('All certs:', JSON.stringify(allCertsToUse.map(c => ({
+          type: c.type,
+          decoded: decryptCertificateType(c.type),
+          fields: Object.keys(c.fields)
+        }))))
       } else {
         allCertsToUse = emailCerts.certificates
+        console.log('Email certs found directly:', JSON.stringify(allCertsToUse.map(c => ({
+          type: c.type,
+          decoded: decryptCertificateType(c.type),
+          fields: Object.keys(c.fields)
+        }))))
       }
       
       let firstEmailCert = null
@@ -528,13 +538,16 @@ import {
 
       for (const cert of allCertsToUse) {
         const { isEmailCert } = decryptCertificateType(cert.type)
-
-        if (isEmailCert && !firstEmailCert) {
+        
+        if (!firstEmailCert || Object.keys(cert.fields).includes("email")) {
           firstEmailCert = cert
         }
         if (cert.fields && Object.keys(cert.fields).length > 0 && !firstCertWithFields)
           firstCertWithFields = cert
       }
+
+      console.log('firstEmailCert:', firstEmailCert ? Object.keys(firstEmailCert.fields) : null)
+      console.log('firstCertWithFields:', firstCertWithFields ? Object.keys(firstCertWithFields.fields) : null)
 
       const selectedCert = certificate ||
                           firstEmailCert ||
@@ -621,12 +634,7 @@ import {
       })
 
       const txid = transaction.txid
-      const beefData = await walletClient.listOutputs({
-        basket: basket,
-        include: "entire transactions"
-      })
-
-      const BEEF = beefData.BEEF
+      const BEEF = transaction.tx
 
       const redeemingData = Utils.toArray("Redeeming token", "utf8")
       const redeemingLockingScript = await pushdrop.lock(
@@ -708,6 +716,11 @@ import {
     return new Promise((resolve, reject) => {
       const interval = setInterval( async () => {
         try {
+          if (Date.now() - startTime > timeoutMs) {
+            clearInterval(interval)
+            reject(new Error(`Failed to switch to ${targetProfile}`))
+          }
+
           const { publicKey } = await walletClient.getPublicKey({ identityKey: true })
 
           if (publicKey && publicKey !== initialIdentity) {
@@ -715,15 +728,11 @@ import {
             resolve(publicKey)
           }
 
-          if (Date.now() - startTime > timeoutMs) {
-            clearInterval(interval)
-            reject(new Error(`Failed to switch to ${targetProfile}`))
-          }
         } catch (error) {
           clearInterval(interval)
           reject(error)
         }
-      }) 
+      }, 1000) 
     })
   }
   
