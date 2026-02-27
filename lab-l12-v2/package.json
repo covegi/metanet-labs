@@ -10,7 +10,7 @@
   "scripts": {
     "lars": "lars",
     "lars:config": "lars config",
-    "start": "lars start",
+    "start": "npm --prefix logger-server run start & lars start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
