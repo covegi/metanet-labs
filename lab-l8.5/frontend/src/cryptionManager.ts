@@ -614,7 +614,7 @@ import {
         [sampleData],
         [0, "cryption"],
         KEY_ID,
-        "anyone",
+        "self",
         true
       )
 
@@ -624,12 +624,11 @@ import {
         description: "initial locking script transaction",
         outputs: [{
           outputDescription: "initial outputs",
-          basket: basket,
           lockingScript: initialLockingScriptHex,
           satoshis: 5,
         }],
         options: {
-          acceptDelayedBroadcast: false
+          acceptDelayedBroadcast: false,
         }
       })
 
@@ -652,7 +651,7 @@ import {
         inputs: [{
           inputDescription: "token to redeem",
           outpoint: `${txid}.${outputIndex}`,
-          unlockingScriptLength: 73,
+          unlockingScriptLength: 107,
         }],
         outputs: [{
           outputDescription: "new token",
@@ -661,14 +660,15 @@ import {
           satoshis: 5,
         }],
         options: {
-          acceptDelayedBroadcast: false
+          acceptDelayedBroadcast: false,  
+          trustSelf: "known"
         }
       })
 
       const unlocker = pushdrop.unlock(
         [0, "cryption"],
         KEY_ID,
-        "anyone",
+        "self",
         "all",
         true,
         5,
